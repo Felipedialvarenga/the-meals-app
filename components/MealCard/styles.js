@@ -6,6 +6,7 @@ export const MealCardItem = styled.View`
   background-color: #f5f5f5;
   border-radius: 10px;
   overflow: hidden;
+  margin: 10px 0;
 `;
 
 export const MealRow = styled.View`
