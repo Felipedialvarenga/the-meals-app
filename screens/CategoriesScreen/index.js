@@ -1,19 +1,23 @@
 import React from "react";
-import { Text, FlatList } from "react-native";
+import { FlatList } from "react-native";
 import { CATEGORIES } from "../../data/dummy-data";
-import { GridItem } from "./styles";
-import Colors from '../../constants/Colors'
+import CategoryCard from "./CategoryCard";
 
 const CategoriesScreen = (props) => {
   const renderGridItem = (itemData) => {
     return (
-      <GridItem onPress={() => {
-          props.navigation.navigate({routeName: 'CategoryMeals', params: {
-              categoryId: itemData.item.id
-          }})
-      }}>
-        <Text>{itemData.item.title}</Text>
-      </GridItem>
+      <CategoryCard
+        title={itemData.item.title}
+        onSelect={() => {
+          props.navigation.navigate({
+            routeName: "CategoryMeals",
+            params: {
+              categoryId: itemData.item.id,
+            },
+          });
+        }}
+        color={itemData.item.color}
+      />
     );
   };
 
@@ -23,7 +27,7 @@ const CategoriesScreen = (props) => {
 };
 
 CategoriesScreen.navigationOptions = {
-    headerTitle: 'Meal Categories'
-}
+  headerTitle: "Meal Categories",
+};
 
 export default CategoriesScreen;

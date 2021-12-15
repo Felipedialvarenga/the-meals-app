@@ -1,30 +1,52 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
-import { CATEGORIES } from "../../data/dummy-data";
+import { CATEGORIES, MEALS } from "../../data/dummy-data";
+import MealCard from "./MealCard";
+import { MealsList, ScreenContainer } from "./styles";
 
-const CategoryMealScreen = props => {
-    const categoryId = props.navigation.getParam('categoryId')
+const CategoryMealScreen = (props) => {
+  const categoryId = props.navigation.getParam("categoryId");
 
-    const chosedCategory = CATEGORIES.find(category => category.id === categoryId)
+  const displayedMeals = MEALS.filter(
+    (meal) => meal.categoryIds.indexOf(categoryId) >= 0
+  );
 
+  const renderMealItem = (itemData) => {
     return (
-        <View>
-            <Text>Category Meal Screen</Text>
-            <Button title="Go to Details" onPress={() => {
-                props.navigation.navigate('MealDetails')
-            }}/>
-        </View>
-    )
-}
+      <MealCard
+        title={itemData.item.title}
+        image={itemData.item.imageUrl}
+        onSelect={() => {
+            props.navigation.navigate({
+                routeName: 'MealDetails',
+                params: {
+                    mealId: itemData.item.id
+                }
+            })
+        }}
+        duration={itemData.item.duration}
+        complexity={itemData.item.complexity.toUpperCase()}
+        affordability={itemData.item.affordability.toUpperCase()}
+      />
+    );
+  };
 
-CategoryMealScreen.navigationOptions = navigationData => {
-    const categoryId = navigationData.navigation.getParam('categoryId')
+  return (
+    <ScreenContainer>
+      <MealsList data={displayedMeals} renderItem={renderMealItem} />
+    </ScreenContainer>
+  );
+};
 
-    const chosedCategory = CATEGORIES.find(category => category.id === categoryId)
+CategoryMealScreen.navigationOptions = (navigationData) => {
+  const categoryId = navigationData.navigation.getParam("categoryId");
 
-    return {
-        headerTitle: chosedCategory.title
-    }
-}
+  const chosedCategory = CATEGORIES.find(
+    (category) => category.id === categoryId
+  );
+
+  return {
+    headerTitle: chosedCategory.title,
+  };
+};
 
 export default CategoryMealScreen;
