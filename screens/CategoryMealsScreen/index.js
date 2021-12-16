@@ -14,6 +14,7 @@ const CategoryMealScreen = (props) => {
 
 CategoryMealScreen.navigationOptions = (navigationData) => {
   const categoryId = navigationData.navigation.getParam("categoryId");
+  const categoryColor = navigationData.navigation.getParam("categoryColor");
 
   const chosedCategory = CATEGORIES.find(
     (category) => category.id === categoryId
@@ -21,6 +22,9 @@ CategoryMealScreen.navigationOptions = (navigationData) => {
 
   return {
     headerTitle: chosedCategory.title,
+    headerStyle: {
+      backgroundColor: categoryColor,
+    },
   };
 };
 

@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 export const MealCardItem = styled.View`
   height: 200px;
   width: 100%;
-  background-color: #f5f5f5;
+  background-color: #E8D5B5;
   border-radius: 10px;
   overflow: hidden;
   margin: 10px 0;
