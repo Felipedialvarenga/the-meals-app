@@ -1,15 +1,29 @@
 import React from "react";
 import MealList from "../../components/MealList";
-import { CATEGORIES, MEALS } from "../../data/dummy-data";
+import { useSelector } from "react-redux";
+import { CATEGORIES } from "../../data/dummy-data";
+import { DefaultText, FallbackTextContainer } from "../../components";
 
 const CategoryMealScreen = (props) => {
   const categoryId = props.navigation.getParam("categoryId");
 
-  const displayedMeals = MEALS.filter(
+  const availableMeals = useSelector((state) => state.meals.filteredMeals);
+
+  const displayedMeals = availableMeals.filter(
     (meal) => meal.categoryIds.indexOf(categoryId) >= 0
   );
 
-  return <MealList listData={displayedMeals} navigation={props.navigation}/>
+  if (!displayedMeals.length) {
+    return (
+      <FallbackTextContainer>
+        <DefaultText>
+          No favorite meals found. Try checking your filters. 😊
+        </DefaultText>
+      </FallbackTextContainer>
+    );
+  }
+
+  return <MealList listData={displayedMeals} navigation={props.navigation} />;
 };
 
 CategoryMealScreen.navigationOptions = (navigationData) => {

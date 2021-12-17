@@ -1,6 +1,6 @@
-import React from "react";
-import { ScrollView, Text } from "react-native";
-import { MEALS } from "../../data/dummy-data";
+import React, { useEffect } from "react";
+import { ScrollView } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/HeaderButton";
 import {
@@ -11,11 +11,29 @@ import {
   TextTitle,
 } from "./styles";
 import { DefaultText } from "../../components/DefaultText/styles";
+import { toggleFavorite } from "../../store/Meals";
 
 const MealDetailsScreen = (props) => {
+  const availableMeals = useSelector((state) => state.meals.meals);
   const mealId = props.navigation.getParam("mealId");
+  const mealIsFav = useSelector((state) =>
+    state.meals.favoriteMeals.some((meal) => meal.id === mealId)
+  );
+  const dispatch = useDispatch();
 
-  const chosedMeal = MEALS.find((meal) => meal.id === mealId);
+  const chosedMeal = availableMeals.find((meal) => meal.id === mealId);
+
+  const onFavorite = () => {
+    dispatch(toggleFavorite(mealId));
+  };
+
+  useEffect(() => {
+    props.navigation.setParams({ mealTitle: chosedMeal.title, onFavorite });
+  }, [chosedMeal]);
+
+  useEffect(() => {
+    props.navigation.setParams({ isFavorite: mealIsFav });
+  }, [mealIsFav]);
 
   return (
     <ScrollView>
@@ -44,19 +62,15 @@ const MealDetailsScreen = (props) => {
 };
 
 MealDetailsScreen.navigationOptions = (navigationData) => {
-  const mealId = navigationData.navigation.getParam("mealId");
-
-  const chosedMeal = MEALS.find((meal) => meal.id === mealId);
+  const mealTitle = navigationData.navigation.getParam("mealTitle");
+  const onFavorite = navigationData.navigation.getParam("onFavorite");
+  const isFavorite = navigationData.navigation.getParam("isFavorite");
 
   return {
-    headerTitle: chosedMeal.title,
+    headerTitle: mealTitle,
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Favorite"
-          iconName="ios-star"
-          onPress={() => console.log("fav")}
-        />
+        <Item title="Favorite" iconName="ios-star" buttonStyle={{color: isFavorite ? 'orange' : 'white'}} onPress={onFavorite} />
       </HeaderButtons>
     ),
   };
